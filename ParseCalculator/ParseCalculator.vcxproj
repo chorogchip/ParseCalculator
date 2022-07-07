@@ -130,12 +130,14 @@
     <ClCompile Include="ParseCalculator.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Reader.cpp" />
+    <ClCompile Include="Tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Token.h" />
+    <ClInclude Include="Tokenizer.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>

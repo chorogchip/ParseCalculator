@@ -8,7 +8,7 @@ constexpr bool isDigit(char c) {
     return '0' <= c && c <= '9';
 }
 constexpr bool isOperation(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/';
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '%';
 }
 enum class EnumCType {
     NONE,

@@ -2,17 +2,14 @@
 #include<iostream>
 #include"Utils.h"
 #include"Token.h"
-#include"Reader.h"
+#include"Tokenizer.h"
 
 
 class Parser {
 private:
-    Reader rd_;
+    Tokenizer tk_;
     std::ostream& ostr_;
-    Token token_;
 
-    int getNumber();
-    void getToken();
     int expr();
     int term();
     int factor();
@@ -20,6 +17,7 @@ private:
 public:
     Parser(std::istream& input_stream, std::ostream& output_stream);
     ~Parser();
+
     void parse();
 };
 

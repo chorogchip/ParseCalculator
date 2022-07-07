@@ -1,61 +1,53 @@
 #include "Parser.h"
 
 Parser::Parser(std::istream& input_stream, std::ostream& output_stream):
-    rd_(input_stream), ostr_(output_stream), token_(0) {
+    tk_(input_stream), ostr_(output_stream) {
 }
 Parser::~Parser() {}
 
-int Parser::getNumber() {
-    int res = 0;
-    while (rd_.getNextType() == EnumCType::DIGIT) {
-        res *= 10;
-        res += rd_.getChar() - '0';
-    } 
-    return res;
-}
-void Parser::getToken() {
-    rd_.flushWhiteSpace();
-
-    if (rd_.getNextType() == EnumCType::END)
-        token_ = Token('\n');
-    else if (rd_.getNextType() == EnumCType::DIGIT)
-        token_ = Token(this->getNumber());
-    else if (rd_.getNextType() == EnumCType::OPERATION)
-        token_ = Token(rd_.getChar());
-    else token_ = Token(rd_.getChar());  // etc : (, ), ..
-}
 int Parser::expr() {
     int res = term();
-    while (token_ == Token('+')) {
-        getToken();
-        res += term();
-    }
+    while (true)
+        if (tk_.getToken() == Token('+')) {
+            tk_.makeToken();
+            res += term();
+        } else if (tk_.getToken() == Token('-')) {
+            tk_.makeToken();
+            res -= term();
+        } else break;
     return res;
 }
 int Parser::term() {
     int res = factor();
-    while (token_ == Token('*')) {
-        getToken();
-        res *= factor();
-    }
+    while (true)
+        if (tk_.getToken() == Token('*')) {
+            tk_.makeToken();
+            res *= factor();
+        } else if (tk_.getToken() == Token('/')) {
+            tk_.makeToken();
+            res /= factor();
+        } else if (tk_.getToken() == Token('%')) {
+            tk_.makeToken();
+            res %= factor();
+        } else break;
     return res;
 }
 int Parser::factor() {
     int res = 0;
-    if (token_ == Token('(')) {
-        getToken();
+    if (tk_.getToken() == Token('(')) {
+        tk_.makeToken();
         res = expr();
-        getToken();  // ')'
-    } else if (token_.type == EnumTokenType::NUMBER) {
-        res = token_.val;
-        getToken();
+        tk_.makeToken();  // ')'
+    } else if (tk_.getToken().type == EnumTokenType::NUMBER) {
+        res = tk_.getToken().val;
+        tk_.makeToken();
     }
     return res;
 }
 
 void Parser::parse() {
-    rd_.getChar();
-    getToken();
+    tk_.startReading();
+    tk_.makeToken();
     int res = expr();
     ostr_ << ">> " << res << std::endl;
 }
